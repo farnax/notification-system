@@ -1,0 +1,38 @@
+version: "3"
+services:
+  client:
+    container_name: notification-client-prod
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    ports: 
+      - "1337:80"
+    env_file:
+      - ./client/.env
+    volumes:
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    networks:
+      - notification-system
+  server:
+    container_name: notification-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${EXPOSED_PORT}:${PORT}"
+    env_file: ./server/.env
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+      - "/usr/src/app/files:${FILES_DIR}"
+    networks:
+      - notification-system
+networks:
+  notification-system:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
