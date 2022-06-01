@@ -1,6 +1,6 @@
 const { createTransport } = require('nodemailer');
 
-const smtpConfig = createTransport({
+const smtpConfig = {
     host: process.env.MAIL_HOST,
     port: 587,
     secure: false,
@@ -8,7 +8,7 @@ const smtpConfig = createTransport({
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS
    }
-});
+};
 
 const sendEmail = async (recipient, notifications ) => {
     try {
